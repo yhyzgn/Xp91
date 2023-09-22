@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name_debug">Xp91-Dev</string>
+    <string name="app_name_release">Xp91</string>
+
+    <string name="download">下载</string>
+</resources>

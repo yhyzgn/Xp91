@@ -1,0 +1,26 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        maven { url 'https://jitpack.io' }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://api.xposed.info/" }
+        mavenCentral()
+        google()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenLocal()
+        maven { url 'https://jitpack.io' }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://api.xposed.info/" }
+        mavenCentral()
+        google()
+    }
+}
+
+rootProject.name = "Xp91"
+include ':app'
+ 

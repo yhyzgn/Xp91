@@ -1,0 +1,121 @@
+plugins {
+    id("com.android.application")
+}
+
+def config = rootProject.ext
+
+android {
+    namespace = "com.yhy.xposed.xp91"
+    compileSdk config.sdk.compileSdk
+
+    // 配置密钥
+    signingConfigs {
+        debug {
+            storeFile file(config.keyDebug.storeFile)
+            storePassword config.keyDebug.storePassword
+            keyAlias config.keyDebug.keyAlias
+            keyPassword config.keyDebug.keyPassword
+        }
+
+        release {
+            storeFile file(config.keyRelease.storeFile)
+            storePassword config.keyRelease.storePassword
+            keyAlias config.keyRelease.keyAlias
+            keyPassword config.keyRelease.keyPassword
+        }
+    }
+
+    defaultConfig {
+        applicationId = "com.yhy.xposed.xp91"
+        minSdk config.sdk.minSdk
+        targetSdk config.sdk.targetSdk
+        versionCode config.version.code
+        versionName config.version.name
+
+        // 开启多分包
+        multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        "module.name"       : project.name,
+                        "router.incremental": "true"
+                ]
+            }
+        }
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+    }
+
+    buildTypes {
+        // 调试版
+        debug {
+            minifyEnabled false
+            debuggable true
+            signingConfig signingConfigs.debug
+            applicationIdSuffix '.debug'
+            resValue "string", "app_name", "@string/app_name_debug"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        // 发行版
+        release {
+            minifyEnabled false
+            shrinkResources false
+            debuggable false
+            signingConfig signingConfigs.release
+            resValue "string", "app_name", "@string/app_name_release"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // 在 Android 构建流程中 AAPT 会使用内置的压缩算法来优化 res/drawable/ 目录下的 PNG 图片，但也可能会导致本来已经优化过的图片体积变大
+    packagingOptions {
+        jniLibs {
+            excludes += ['META-INF/*']
+            pickFirsts += ['lib/*/*.so']
+        }
+        resources {
+            excludes += ['META-INF/*']
+        }
+    }
+
+    // 打包apk自动生成名称
+    android.applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            outputFileName = "Xp91_${defaultConfig.versionName}_${defaultConfig.versionCode}.apk"
+        }
+    }
+
+    // 忽略打包时的警告
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'TransformException'
+        ignoreWarnings true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.annotation:annotation:1.6.0'
+
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+
+    compileOnly 'de.robv.android.xposed:api:82'
+
+    androidTestImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    androidTestImplementation 'androidx.test:core:1.5.0'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
