@@ -27,7 +27,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  */
 public class MainHook implements IXposedHookZygoteInit, IXposedHookLoadPackage, IXposedHookInitPackageResources {
     private static final String[] HOOKED_PKG_NAMES = {
-        "vip.pqvln.mykgnx"
+            "com.stmwy.wudfli", // 6.1.1 版本
     };
 
     private Context mContext;
@@ -36,8 +36,8 @@ public class MainHook implements IXposedHookZygoteInit, IXposedHookLoadPackage, 
 
     public MainHook() {
         HookRegister.instance
-            .add(new HomeActivityHook())
-            .add(new ViewContentActivityHook());
+                .add(new HomeActivityHook())
+                .add(new ViewContentActivityHook());
     }
 
     @Override
